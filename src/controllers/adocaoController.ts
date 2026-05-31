@@ -79,4 +79,32 @@ export class AdocaoController {
       res.status(500).send({ error: "Erro ao buscar solicitações de adoção." });
     }
   }
+
+  // Rota GET /adocoes/instituicao/:id - Lista todas as solicitações de adoção recebidas por uma instituição
+  async listarAdocoesPorInstituicao(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+
+      if (!id) {
+        return res.status(400).send({ error: "ID inválido." });
+      }
+
+      const instituicaoId = Number(id);
+
+      if (isNaN(instituicaoId)) {
+        return res.status(400).send({ error: "ID inválido." });
+      }
+
+      const resultado = await adocaoBusiness.listarAdocoesPorInstituicao(instituicaoId);
+
+      if (!resultado.instituicaoExiste) {
+        return res.status(404).send({ error: "Instituição não encontrada" });
+      }
+
+      res.status(200).json(resultado.adocoes);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ error: "Erro ao buscar solicitações de adoção para a instituição." });
+    }
+  }
 }

@@ -11,6 +11,9 @@ export interface Pet {
   cor?: string;
   data_cadastro?: string;
   ativo?: boolean;
+  age?: string;
+  desc?: string;
+  img?: string;
 }
 
 // Interface para criar um novo pet (mesma estrutura do Pet)
@@ -21,6 +24,9 @@ export interface PetRequest {
   vacinado?: boolean;
   castrado?: boolean;
   cor?: string;
+  age?: string;
+  desc?: string;
+  img?: string;
 }
 
 // Interface para retornar dados do pet
@@ -34,5 +40,8 @@ export interface PetResponse {
   cor?: string;
   data_cadastro?: string;
   ativo?: boolean;
+  age?: string;
+  desc?: string;
+  img?: string;
 }
 

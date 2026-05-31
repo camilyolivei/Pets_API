@@ -18,4 +18,7 @@ router.patch("/:id/status", adocaoController.atualizarStatus);
 // GET /adocoes/usuario/:id - Lista as solicitações de adoção de um usuário específico
 router.get("/usuario/:id", adocaoController.listarAdocoesPorUsuario);
 
+// GET /adocoes/instituicao/:id - Lista as solicitações de adoção recebidas por uma instituição
+router.get("/instituicao/:id", adocaoController.listarAdocoesPorInstituicao);
+
 export default router;

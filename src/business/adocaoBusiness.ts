@@ -74,4 +74,52 @@ export class AdocaoBusiness {
       adocoes,
     };
   }
+
+  // Lista todas as solicitações de adoção recebidas por uma instituição
+  async listarAdocoesPorInstituicao(instituicaoId: number): Promise<{
+    instituicaoExiste: boolean;
+    adocoes: AdocaoDetalhada[];
+  }> {
+    const instituicao = await db("INSTITUICOES").where({ id: instituicaoId }).first();
+
+    if (!instituicao) {
+      return {
+        instituicaoExiste: false,
+        adocoes: [],
+      };
+    }
+
+    const adocoesDb = await db("PROCESSO_ADOCAO as pa")
+      .leftJoin("PETS as p", "pa.pet_id", "p.id")
+      .leftJoin("USUARIOS as u", "pa.usuario_id", "u.id")
+      .where("pa.instituicao_id", instituicaoId)
+      .orderBy("pa.data_solicitacao", "desc")
+      .select(
+        "pa.id",
+        "pa.pet_id",
+        "pa.status",
+        "pa.data_solicitacao",
+        "pa.usuario_id",
+        "p.nome as pet_nome",
+        "p.especie as pet_especie",
+        "u.nome as usuario_nome"
+      );
+
+    const adocoes = adocoesDb.map<AdocaoDetalhada>((adocao) => ({
+      id: adocao.id,
+      petId: adocao.pet_id,
+      petName: adocao.pet_nome ?? null,
+      petSpecies: adocao.pet_especie ?? null,
+      status: adocao.status,
+      requestDate: adocao.data_solicitacao,
+      applicant: adocao.usuario_nome ?? null, // Usaremos property 'applicant' que o frontend já espera
+      institutionId: instituicaoId,
+      institutionName: instituicao.nome,
+    }));
+
+    return {
+      instituicaoExiste: true,
+      adocoes,
+    };
+  }
 }

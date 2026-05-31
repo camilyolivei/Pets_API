@@ -17,6 +17,8 @@ export class PetBusiness {
       vacinado: pet.vacinado,
       castrado: pet.castrado,
       cor: pet.cor,
+      age: pet.idade_aproximada,
+      desc: pet.historia,
       data_cadastro: pet.data_cadastro,
       ativo: pet.ativo,
     }));
@@ -35,6 +37,8 @@ export class PetBusiness {
       vacinado: pet.vacinado ?? false,
       castrado: pet.castrado ?? false,
       cor: pet.cor ?? null,
+      idade_aproximada: pet.age ?? null,
+      historia: pet.desc ?? null,
       ativo: pet.ativo ?? true,
       status_adocao: "disponível",
     }).returning("id");
@@ -50,6 +54,8 @@ export class PetBusiness {
       vacinado: pet.vacinado ?? false,
       castrado: pet.castrado ?? false,
       ativo: pet.ativo ?? true,
+      age: pet.age ?? null,
+      desc: pet.desc ?? null,
     };
 
     if (pet.cor !== undefined) novoPet.cor = pet.cor;
@@ -73,18 +79,26 @@ export class PetBusiness {
       vacinado: pet.vacinado,
       castrado: pet.castrado,
       cor: pet.cor,
+      age: pet.idade_aproximada,
+      desc: pet.historia,
       data_cadastro: pet.data_cadastro,
       ativo: pet.ativo,
     };
   }
 
   // Atualiza os dados de um pet existente
-  async atualizarPet(id: number, dadosAtualizacao: { name?: string; type?: string; owner_id?: number }): Promise<boolean> {
+  async atualizarPet(id: number, dadosAtualizacao: any): Promise<boolean> {
     const updateData: any = {};
     
     if (dadosAtualizacao.name) updateData.nome = dadosAtualizacao.name;
     if (dadosAtualizacao.type) updateData.especie = dadosAtualizacao.type;
     if (dadosAtualizacao.owner_id) updateData.instituicao_id = dadosAtualizacao.owner_id;
+    if (dadosAtualizacao.age) updateData.idade_aproximada = dadosAtualizacao.age;
+    if (dadosAtualizacao.desc) updateData.historia = dadosAtualizacao.desc;
+    if (dadosAtualizacao.ativo !== undefined) updateData.ativo = dadosAtualizacao.ativo;
+    if (dadosAtualizacao.vacinado !== undefined) updateData.vacinado = dadosAtualizacao.vacinado;
+    if (dadosAtualizacao.castrado !== undefined) updateData.castrado = dadosAtualizacao.castrado;
+    if (dadosAtualizacao.cor !== undefined) updateData.cor = dadosAtualizacao.cor;
 
     if (Object.keys(updateData).length === 0) return false;
 
