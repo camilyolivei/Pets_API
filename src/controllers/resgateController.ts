@@ -25,4 +25,15 @@ export class ResgateController {
       res.status(500).send({ error: "Erro ao reportar resgate." });
     }
   }
+
+  // Rota GET /resgates
+  async listarResgates(req: Request, res: Response) {
+    try {
+      const resgates = await resgateBusiness.listarResgates();
+      res.status(200).json(resgates);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ error: "Erro ao buscar resgates." });
+    }
+  }
 }

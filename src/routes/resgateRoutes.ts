@@ -12,4 +12,7 @@ const resgateController = new ResgateController();
 // POST /resgates/reportar - Cria um novo reporte de animal que precisa ser resgatado
 router.post("/reportar", resgateController.reportarResgate);
 
+// GET /resgates - Lista todos os resgates
+router.get("/", resgateController.listarResgates);
+
 export default router;

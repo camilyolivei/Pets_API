@@ -17,4 +17,19 @@ export class ResgateBusiness {
     // Retorna o ID do reporte que acabou de ser criado
     return id;
   }
+
+  // Busca todos os resgates pendentes ou urgentes
+  async listarResgates() {
+    const resgatesDb = await db("REPORTES_RESGATE")
+      .select("*")
+      .orderBy("data_hora_reporte", "desc");
+      
+    return resgatesDb.map((r: any) => ({
+      id: r.id,
+      descricao: r.descricao_local,
+      localizacao: r.descricao_local,
+      status: r.condicao_animal,
+      data: r.data_hora_reporte
+    }));
+  }
 }
