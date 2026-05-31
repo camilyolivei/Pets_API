@@ -108,3 +108,9 @@ export class DoacaoBusiness {
       statusEntrega: doacao.status_entrega ?? null,
     }));
 
+    return {
+      instituicaoExiste: true,
+      doacoes,
+    };
+  }
+}

@@ -8,7 +8,7 @@ export class PetBusiness {
   // Busca todos os pets cadastrados no banco de dados
   async listarPets(): Promise<PetResponse[]> {
     const pets = await db("PETS").select("*");
-    
+
     return pets.map(pet => ({
       id: pet.id,
       name: pet.nome,
@@ -66,7 +66,7 @@ export class PetBusiness {
   // Busca um pet específico pelo seu ID
   async buscarPetPorId(id: number): Promise<PetResponse | null> {
     const pet = await db("PETS").where({ id }).first();
-    
+
     if (!pet) {
       return null;
     }
@@ -89,7 +89,7 @@ export class PetBusiness {
   // Atualiza os dados de um pet existente
   async atualizarPet(id: number, dadosAtualizacao: any): Promise<boolean> {
     const updateData: any = {};
-    
+
     if (dadosAtualizacao.name) updateData.nome = dadosAtualizacao.name;
     if (dadosAtualizacao.type) updateData.especie = dadosAtualizacao.type;
     if (dadosAtualizacao.owner_id) updateData.instituicao_id = dadosAtualizacao.owner_id;
