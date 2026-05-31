@@ -22,14 +22,14 @@ export class PetController {
   // Rota POST /pets - Cria um novo pet
   async criarPet(req: Request, res: Response): Promise<void> {
     try {
-      const { name, type, owner_id } = req.body;
+      const { name, type, owner_id, age, desc, cor, vacinado, castrado, ativo, img } = req.body;
 
       if (!name || !type || !owner_id) {
         res.status(400).send("Nome, tipo e owner_id são obrigatórios");
         return;
       }
 
-      const novoPet = await petBusiness.criarPet({ name, type, owner_id });
+      const novoPet = await petBusiness.criarPet({ name, type, owner_id, age, desc, cor, vacinado, castrado, ativo, img });
       
       res.status(201).json(novoPet);
     } catch (error) {
@@ -72,7 +72,7 @@ export class PetController {
   async atualizarPet(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const { name, type, owner_id } = req.body;
+      const { name, type, owner_id, age, desc, cor, vacinado, castrado, ativo, img } = req.body;
       
       if (!id) {
         res.status(400).send("ID inválido");
@@ -86,7 +86,7 @@ export class PetController {
         return;
       }
 
-      const atualizado = await petBusiness.atualizarPet(petId, { name, type, owner_id });
+      const atualizado = await petBusiness.atualizarPet(petId, { name, type, owner_id, age, desc, cor, vacinado, castrado, ativo, img });
       
       if (atualizado) {
         res.status(200).send("Pet atualizado com sucesso");
