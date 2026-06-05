@@ -10,13 +10,13 @@ export class UsuarioController {
   // Rota POST /usuarios - Cria um novo usuário
   async criarUsuario(req: Request, res: Response): Promise<void> {
     try {
-      const { name, email, password } = req.body;
+      const { name, email, password, telefone, endereco } = req.body;
       if (!name || !email || !password) {
         res.status(400).send("Nome, email e senha são obrigatórios");
         return;
       }
 
-      const novoUsuario = await usuarioBusiness.criarUsuario({ name, email, password });
+      const novoUsuario = await usuarioBusiness.criarUsuario({ name, email, password, telefone, endereco });
       
       res.status(201).json(novoUsuario);
     } catch (error: any) {
@@ -87,7 +87,7 @@ export class UsuarioController {
   async atualizarUsuario(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const { name, email } = req.body;
+      const { name, email, telefone, endereco } = req.body;
       
       if (!id) {
         res.status(400).send("ID inválido");
@@ -101,7 +101,7 @@ export class UsuarioController {
         return;
       }
 
-      const atualizado = await usuarioBusiness.atualizarUsuario(usuarioId, { name, email });
+      const atualizado = await usuarioBusiness.atualizarUsuario(usuarioId, { name, email, telefone, endereco });
       
       if (atualizado) {
         res.status(200).send("Usuário atualizado com sucesso");

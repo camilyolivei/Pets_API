@@ -23,7 +23,26 @@ export class AdocaoBusiness {
 
   // Atualiza o status de uma adoção (pendente, aprovada, recusada)
   async atualizarStatus(id: number, status: string) {
-    return await db("PROCESSO_ADOCAO").where({ id }).update({ status });
+    const atualizados = await db("PROCESSO_ADOCAO").where({ id }).update({ status });
+
+    if (status === "aprovada" || status === "aprovado") {
+      const adocao = await db("PROCESSO_ADOCAO").where({ id }).first();
+      if (adocao) {
+        // Marca o pet como inativo e adotado
+        await db("PETS").where({ id: adocao.pet_id }).update({ 
+          ativo: false,
+          status_adocao: "adotado" 
+        });
+
+        // Recusa automaticamente as outras solicitações para o mesmo pet
+        await db("PROCESSO_ADOCAO")
+          .where({ pet_id: adocao.pet_id })
+          .whereNot({ id })
+          .update({ status: "recusada" });
+      }
+    }
+
+    return atualizados;
   }
 
   // Lista todas as solicitações de adoção associadas a um usuário específico
@@ -61,12 +80,14 @@ export class AdocaoBusiness {
     const adocoes = adocoesDb.map<AdocaoDetalhada>((adocao) => ({
       id: adocao.id,
       petId: adocao.pet_id,
+      pet: adocao.pet_nome ?? null, // adicionado alias pet
       petName: adocao.pet_nome ?? null,
       petSpecies: adocao.pet_especie ?? null,
       status: adocao.status,
       requestDate: adocao.data_solicitacao,
       institutionId: adocao.instituicao_id ?? null,
       institutionName: adocao.instituicao_nome ?? null,
+      instituicao: adocao.instituicao_nome ?? null, // adicionado alias instituicao
     }));
 
     return {

@@ -15,4 +15,7 @@ router.post("/reportar", resgateController.reportarResgate);
 // GET /resgates - Lista todos os resgates
 router.get("/", resgateController.listarResgates);
 
+// PATCH /resgates/:id/status - Atualiza o status do resgate (ex: Resolvido)
+router.patch("/:id/status", resgateController.atualizarStatus);
+
 export default router;

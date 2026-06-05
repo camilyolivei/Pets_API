@@ -113,4 +113,54 @@ export class DoacaoBusiness {
       doacoes,
     };
   }
+
+  // Lista todas as doações realizadas por um usuário específico
+  async listarDoacoesPorUsuario(usuarioId: number): Promise<{
+    usuarioExiste: boolean;
+    doacoes: DoacaoDetalhada[];
+  }> {
+    const usuario = await db("USUARIOS").where({ id: usuarioId }).first();
+
+    if (!usuario) {
+      return {
+        usuarioExiste: false,
+        doacoes: [],
+      };
+    }
+
+    const doacoesDb = await db("DOACOES as d")
+      .leftJoin("INSTITUICOES as i", "d.instituicao_id", "i.id")
+      .leftJoin("TIPOS_DOACAO as td", "d.tipo_doacao_id", "td.id")
+      .where("d.usuario_id", usuarioId)
+      .orderBy("d.data_doacao", "desc")
+      .select(
+        "d.id",
+        "d.usuario_id",
+        "d.instituicao_id",
+        "d.tipo_doacao_id",
+        "d.quantidade",
+        "d.data_doacao",
+        "d.status_entrega",
+        "i.nome as instituicao_nome",
+        "td.nome_tipo as tipo_doacao_nome"
+      );
+
+    const doacoes = doacoesDb.map<DoacaoDetalhada>((doacao) => ({
+      id: doacao.id,
+      usuarioId: doacao.usuario_id,
+      usuarioNome: usuario.nome, // <-- Adicionado para satisfazer a interface DoacaoDetalhada
+      instituicaoId: doacao.instituicao_id,
+      instituicaoNome: doacao.instituicao_nome ?? null,
+      tipoDoacaoId: doacao.tipo_doacao_id,
+      tipoDoacaoNome: doacao.tipo_doacao_nome ?? null,
+      quantidade: Number(doacao.quantidade),
+      dataDoacao: doacao.data_doacao,
+      statusEntrega: doacao.status_entrega ?? null,
+    }));
+
+    return {
+      usuarioExiste: true,
+      doacoes,
+    };
+  }
 }

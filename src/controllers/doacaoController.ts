@@ -80,5 +80,33 @@ export class DoacaoController {
       res.status(500).send({ error: "Erro ao buscar doações da instituição." });
     }
   }
+
+  // Rota GET /doacoes/usuario/:id - Lista todas as doações realizadas por um usuário
+  async listarDoacoesPorUsuario(req: Request, res: Response) {
+    try {
+      const { id } = req.params;
+
+      if (!id) {
+        return res.status(400).send({ error: "ID inválido." });
+      }
+
+      const usuarioId = Number(id);
+
+      if (isNaN(usuarioId)) {
+        return res.status(400).send({ error: "ID inválido." });
+      }
+
+      const resultado = await doacaoBusiness.listarDoacoesPorUsuario(usuarioId);
+
+      if (!resultado.usuarioExiste) {
+        return res.status(404).send({ error: "Usuário não encontrado" });
+      }
+
+      res.status(200).json(resultado.doacoes);
+    } catch (error) {
+      console.error(error);
+      res.status(500).send({ error: "Erro ao buscar doações do usuário." });
+    }
+  }
 }
 

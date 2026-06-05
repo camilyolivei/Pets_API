@@ -32,4 +32,13 @@ export class ResgateBusiness {
       data: r.data_hora_reporte
     }));
   }
+
+  // Atualiza o status do resgate
+  async atualizarStatus(id: number, status: string) {
+    const atualizados = await db("REPORTES_RESGATE")
+      .where({ id })
+      .update({ condicao_animal: status });
+      
+    return atualizados > 0;
+  }
 }

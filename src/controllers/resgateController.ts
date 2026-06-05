@@ -36,4 +36,31 @@ export class ResgateController {
       res.status(500).send({ error: "Erro ao buscar resgates." });
     }
   }
+
+  // Rota PATCH /resgates/:id/status
+  async atualizarStatus(req: Request, res: Response) {
+    try {
+      const id = parseInt(req.params.id as string);
+      const { status } = req.body;
+
+      if (isNaN(id)) {
+        return res.status(400).json({ error: "ID inválido." });
+      }
+
+      if (!status) {
+        return res.status(400).json({ error: "Status é obrigatório." });
+      }
+
+      const atualizado = await resgateBusiness.atualizarStatus(id, status as string);
+
+      if (atualizado) {
+        res.status(200).json({ message: "Status do resgate atualizado com sucesso!" });
+      } else {
+        res.status(404).json({ error: "Resgate não encontrado." });
+      }
+    } catch (error: any) {
+      console.error(error);
+      res.status(500).json({ error: error.message || "Erro ao atualizar status do resgate." });
+    }
+  }
 }

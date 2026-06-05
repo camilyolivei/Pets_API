@@ -15,5 +15,8 @@ router.post("/", doacaoController.registrarDoacao);
 // GET /doacoes/instituicao/:id - Lista todas as doações recebidas por uma instituição
 router.get("/instituicao/:id", doacaoController.listarDoacoesPorInstituicao);
 
+// GET /doacoes/usuario/:id - Lista todas as doações realizadas por um usuário
+router.get("/usuario/:id", doacaoController.listarDoacoesPorUsuario);
+
 export default router;
 
